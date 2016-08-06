@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="action_bar">#FFC300</color>
+    <color name="back_ground">#FFFFE5</color>
 </resources>

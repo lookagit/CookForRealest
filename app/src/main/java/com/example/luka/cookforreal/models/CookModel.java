@@ -2,12 +2,10 @@ package com.example.luka.cookforreal.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by luka on 8/4/2016.
- */
-public class CookModel {
+public class CookModel{
     private String id;
     private String title;
     @SerializedName("image_file_name")
@@ -20,23 +18,6 @@ public class CookModel {
     private List<Ingredients> ingredients;
 
 
-    public List<Tags> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tags> tags) {
-        this.tags = tags;
-    }
-
-    public List<Ingredients> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredients> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-
     public String getId() {
         return id;
     }
@@ -44,6 +25,7 @@ public class CookModel {
     public void setId(String id) {
         this.id = id;
     }
+
     public String getDefault_preparation() {
         return default_preparation;
     }
@@ -51,10 +33,6 @@ public class CookModel {
     public void setDefault_preparation(String default_preparation) {
         this.default_preparation = default_preparation;
     }
-
-
-
-
 
     public String getTitle() {
         return title;
@@ -80,18 +58,32 @@ public class CookModel {
         this.likes = likes;
     }
 
-    public List<Steps> getStoryList() {
+    public List<Steps> getSteps() {
         return steps;
     }
 
-    public void setStoryList(List<Steps> storyList) {
-        this.steps = storyList;
+    public void setSteps(List<Steps> steps) {
+        this.steps = steps;
+    }
+
+    public List<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
+    }
+
+    public List<Ingredients> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredients> ingredients) {
+        this.ingredients = ingredients;
     }
 
 
-
-
-    public static class Steps{
+    public static class Steps {
         private String text;
         private String timer;
 
@@ -113,8 +105,7 @@ public class CookModel {
     }
 
 
-
-    public static class Tags{
+    public static class Tags {
         private String id;
 
         public String getId() {
@@ -125,11 +116,20 @@ public class CookModel {
             this.id = id;
         }
     }
-    public static class Ingredients{
+
+    public static class Ingredients {
         private String id;
+        private String name;
         private String quantity;
         private String preferred_measure;
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
         public String getId() {
             return id;
         }
@@ -154,5 +154,6 @@ public class CookModel {
             this.quantity = quantity;
         }
     }
+
 
 }

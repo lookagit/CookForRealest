@@ -2,6 +2,7 @@ package com.example.luka.cookforreal;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Movie;
@@ -15,14 +16,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.luka.cookforreal.models.CookModel;
+import com.example.luka.cookforreal.models.IngredientsModel;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,9 +39,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.CollationKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
         ImageLoader.getInstance().init(config);
 
         lvCook = (ListView)findViewById(R.id.lvCook);
+        new JSONTask().execute("http://46.101.236.188/v1/recipes/get-init-recipes");
+
+
+
     }
 
     public class JSONTask extends AsyncTask<String, String, List<CookModel>> {
@@ -93,64 +104,43 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray parentArray = parentObject.getJSONArray("recipes");
                 List<CookModel> cookModelList = new ArrayList<>();
                 Gson gson = new Gson();
-
                 for (int i = 0; i < parentArray.length(); i++)
                    {
                        JSONObject finalObject = parentArray.getJSONObject(i);
                        CookModel cookModel = gson.fromJson(finalObject.toString(),CookModel.class);
-
-                     /*  cookModel.setId(finalObject.getString("id"));
-                       cookModel.setImage(finalObject.getString("image_file_name"));
-                       cookModel.setTitle(finalObject.getString("title"));
-                       cookModel.setLikes("Lajkovi "+finalObject.getString("likes"));
-                       cookModel.setDefault_preparation("Vreme pripreme: "+ finalObject.getString("preparation_time")+"min");
-                       List<CookModel.Story> storyList = new ArrayList<>();
-                       for(int j = 0;j < finalObject.getJSONArray("steps").length();j++){
-                           CookModel.Story story = new CookModel.Story();
-                           story.setStory(finalObject.getJSONArray("steps").getJSONObject(j).getString("text"));
-                           storyList.add(story);
-                       }
-                       cookModel.setStoryList(storyList);*/
                        cookModelList.add(cookModel);
                    }
+
                 return cookModelList;
-            } catch (IOException e) {
+
+            }
+            catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e) {
+            }
+            catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
         }
-
         @Override
-        protected void onPostExecute(List<CookModel> result) {
+        protected void onPostExecute(final List<CookModel> result) {
             super.onPostExecute(result);
 
             CookAdapter adapter = new CookAdapter(getApplicationContext(),R.layout.ow,result);
             lvCook.setAdapter(adapter);
-
             dialog.dismiss();
+            lvCook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(getApplicationContext(),SecondActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.action_refresh)
-        {
-            new JSONTask().execute("http://46.101.236.188/v1/recipes/get-init-recipes");
-            return true;
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public class CookAdapter extends ArrayAdapter
     {
@@ -176,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                     holder.tvTitle.setTypeface(james);
                     holder.tvPrep = (TextView) convertView.findViewById(R.id.tvPrep);
                     holder.tvLikes = (TextView) convertView.findViewById(R.id.tvLikes);
-                    holder.tvStory = (TextView) convertView.findViewById(R.id.tvStory);
                     convertView.setTag(holder);
                 }else{
                   holder = (ViewHolder)convertView.getTag();
@@ -211,14 +200,6 @@ public class MainActivity extends AppCompatActivity {
             holder.tvPrep.setTextColor(Color.parseColor("#A9A9A9"));
             holder.tvLikes.setText("Lajkovi " + cookModelList.get(position).getLikes());
             holder.tvLikes.setTextColor(Color.parseColor("#FFC300"));
-            StringBuffer stringBuffer = new StringBuffer();
-            for(CookModel.Steps steps : cookModelList.get(position).getStoryList())
-            {
-                stringBuffer.append("Ukratko: "+steps.getText()+"...\n");
-                break;
-            }
-            holder.tvStory.setText(stringBuffer);
-
             return  convertView;
         }
 
