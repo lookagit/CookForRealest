@@ -208,20 +208,20 @@ public class SecondActivity extends AppCompatActivity {
                         }
                     });
                     Typeface james = Typeface.createFromAsset(getAssets(), getString(R.string.typeface_devroyun));
-                    tvTitles.setText(result.get(3).getTitle());
+                    tvTitles.setText(result.get(brojim).getTitle());
                     tvTitles.setTypeface(james);
-                    tvPreps.setText("Ukupno vreme pripreme je oko "+result.get(0).getDefault_preparation()+"min.");
+                    tvPreps.setText("Ukupno vreme pripreme je oko "+result.get(brojim).getDefault_preparation()+"min.");
                     StringBuffer ingridienceBuff = new StringBuffer();
                     StringBuffer storyBuff = new StringBuffer();
                     int brojac = 1;
-                    for (CookModel.Steps steps : result.get(0).getSteps()) {
+                    for (CookModel.Steps steps : result.get(brojim).getSteps()) {
                         String brojacString = Integer.toString(brojac);
                         storyBuff.append(brojacString + ".korak:\n " + steps.getText() + "\n\nTrajanje: " + steps.getTimer() + "min.\n\n");
                         brojac++;
                     }
                     tvStorys.setText(storyBuff);
                     int zarez = 0;
-                    for (CookModel.Ingredients ing : result.get(0).getIngredients()) {
+                    for (CookModel.Ingredients ing : result.get(brojim).getIngredients()) {
                         ingridienceBuff.append(ing.getName());
                         if(zarez < result.get(0).getIngredients().size()-1)
                         {
