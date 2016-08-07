@@ -133,9 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getApplicationContext(),SecondActivity.class);
+                    intent.putExtra("data",result.get(position).getId());
                     startActivity(intent);
                 }
             });
+            Toast.makeText(getApplicationContext(),"Klikni na jelo koje zelis",Toast.LENGTH_LONG).show();
 
         }
     }
